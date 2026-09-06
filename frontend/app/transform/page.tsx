@@ -388,10 +388,12 @@ export default function TransformPage() {
       selected["Output Format"]
     );
 
-    const backendUrl = process.env.NEXT_PUBLIC_API_URL || "https://gen-ai-platform-for-automated-content.onrender.com";
+    const rawUrl = process.env.NEXT_PUBLIC_API_URL || "https://gen-ai-platform-for-automated-content.onrender.com";
+    const cleanBaseUrl = rawUrl.trim().replace(/\/+$/, "").replace(/\/transform$/, "");
+    const targetEndpoint = `${cleanBaseUrl}/transform`;
 
     const response = await fetch(
-      `${backendUrl}/transform`,
+      targetEndpoint,
       {
         method: "POST",
         body: formData,
@@ -399,7 +401,14 @@ export default function TransformPage() {
     );
 
     if (!response.ok) {
-      throw new Error("Transformation failed.");
+      let errorMessage = `Transformation failed (${response.status} ${response.statusText}).`;
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData.detail || errorData.error || errorMessage;
+      } catch {
+        // Fallback if response body is not JSON
+      }
+      throw new Error(errorMessage);
     }
 
     const blob = await response.blob();
@@ -419,9 +428,9 @@ export default function TransformPage() {
     window.URL.revokeObjectURL(downloadUrl);
 
     setHasGenerated(true);
-  } catch (error) {
+  } catch (error: any) {
     console.error("Transformation error:", error);
-    alert("Transformation failed. Please try again.");
+    alert(error?.message || "Transformation failed. Please try again.");
   } finally {
     setIsTransforming(false);
   }
