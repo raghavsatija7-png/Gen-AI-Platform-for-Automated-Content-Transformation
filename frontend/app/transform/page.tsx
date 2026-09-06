@@ -388,8 +388,10 @@ export default function TransformPage() {
       selected["Output Format"]
     );
 
+    const backendUrl = process.env.NEXT_PUBLIC_API_URL || "https://gen-ai-platform-for-automated-content.onrender.com";
+
     const response = await fetch(
-      "https://gen-ai-platform-for-automated-content.onrender.com",
+      `${backendUrl}/transform`,
       {
         method: "POST",
         body: formData,
