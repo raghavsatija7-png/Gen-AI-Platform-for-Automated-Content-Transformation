@@ -17,7 +17,8 @@ prompt = build_transformation_prompt(
     language="English",
     detail_level="Concise",
     content_style="Professional",
-    output_type="Executive Summary"
+    output_type="Executive Summary",
+    additional_instructions=""
 )
 print("Sending request to Groq...")
 
