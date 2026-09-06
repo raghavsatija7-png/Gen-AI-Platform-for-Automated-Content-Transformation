@@ -22,3 +22,21 @@ test.pdf
 
 # macOS
 .DS_Store
+
+# Dependencies
+node_modules/
+
+# Build outputs
+.next/
+out/
+build/
+
+# Environment variables
+.env
+.env*.local
+
+# Tools & OS
+.vercel
+.DS_Store
+Thumbs.db
+*.log
