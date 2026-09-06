@@ -427,10 +427,14 @@ export default function TransformPage() {
 
     window.URL.revokeObjectURL(downloadUrl);
 
-    setHasGenerated(true);
   } catch (error: any) {
     console.error("Transformation error:", error);
-    alert(error?.message || "Transformation failed. Please try again.");
+    const msg = error?.message || "";
+    if (msg.includes("Load failed") || msg.includes("Failed to fetch")) {
+      alert("Backend connection failed (Load failed). This usually happens when the Render server is waking up from sleep mode (takes 30-50s on Render Free Tier). Please wait 15 seconds and click Transform again!");
+    } else {
+      alert(msg || "Transformation failed. Please try again.");
+    }
   } finally {
     setIsTransforming(false);
   }
